@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Acronym Guess Game</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 920px; margin: 40px auto; padding: 0 16px; }
+    h1 { margin: 0 0 8px; }
+    .muted { color: #555; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin: 14px 0; }
+    textarea, input, select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #ccc; font-size: 16px; }
+    textarea { min-height: 220px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    button { padding: 10px 14px; border: 0; border-radius: 10px; cursor: pointer; font-weight: 600; }
+    button.primary { background: #111; color: #fff; }
+    button.secondary { background: #eee; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .row > * { flex: 1; min-width: 160px; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; background: #f3f3f3; margin-right: 8px; }
+    .ok { color: #0a7a2f; font-weight: 700; }
+    .nope { color: #b00020; font-weight: 700; }
+    .answer { background: #fafafa; border-left: 4px solid #ddd; padding: 10px; border-radius: 10px; }
+    .hidden { display: none; }
+    .tiny { font-size: 13px; color: #666; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <h1>Acronym Guess Game</h1>
+  <div class="muted">Add acronyms, start game, guess meanings, mildly panic, repeat.</div>
+
+  <div class="card" id="setupCard">
+    <h2>1) Acronym bank</h2>
+    <div class="muted">Format per line: <span class="pill">ACR | Meaning | Category | Notes | Website</span></div>
+
+    <textarea id="bankInput">3C | Comments, Communications, Checklist |  |  |
+AACRAO | American Association of College Registrars & Admissions Officers | Organization |  |
+ACSC | Administrative Computing Steering Committee | Committee |  |
+AD-IT | ASR Admissions IT Team | Team |  |
+ADC | Administrative Degree Clearance |  |  |
+ADRV |  |  |  |
+ALO | Additional Loan Options |  |  |
+APLUS | Front End Student Information System for Student Record Information | System | Application to access student data. |
+AppDev | Application Development |  |  |
+ARF | Access Request Form | Form |  |
+ASR | Academic Support Resources | University Office |  |
+BA | Business Analyst | Position |  |
+BCT | Behavioral Care Team |  |  |
+BOR | Board of Regents |  |  |
+BTAA | Big Ten Academic Alliance |  |  |
+CAB | Change Advisory Board |  |  |
+CC/SD | Campus Community / Shared Data |  |  |
+CCAPS | College of Continuing and Professional Studies |  |  |
+CDL | Common Data Layer |  |  |
+CIP Code | Classification of Instructional Programs |  | Provides a taxonomic scheme that supports the accurate tracking and reporting of fields of study and program completions activity. |
+CITS Process |  |  |  |
+CLS | Training - Classroom Use |  | Reserved for use by training services teams for conducting classroom training sessions. |
+Comm Gen | Communication Generation |  | Communication tool in PeopleSoft |
+CPU | Critical Patch Update |  |  |
+CS | Campus Solutions |  | Component of PeopleSoft |
+CTS | Classroom Technical Services |  | Unit of OCM |
+CUE | Council for Undergraduate Education |  |  |
+DEV | Development | System Environments | Development activities for PeopleSoft applications. Primarily used by AppDev. |
+DiaLOG | Digital Learning Operational Governance |  |  |
+DMS | Data Mover Script |  |  |
+DORS | Destiny One Registration System |  | Non-Credit Registration |
+DRC | Disability Resource Center |  |  |
+ECAS | Electronic Course Authorization System |  |  |
+ECI | External Credit Interface |  |  |
+EDMR | Enterprise Data Management & Reporting |  |  |
+EDP | Enterprise Data Platform |  |  |
+EDW | Enterprise Data Warehouse |  |  |
+EFAAN | Electronic Financial Aid Award Notice |  |  |
+EFS | Enterprise Financial System |  |  |
+EII | Enterprise Information Integration |  |  |
+ERG |  |  |  |
+ESUP | Enterprise Systems Upgrade Project |  |  |
+ETL | Extract, Transform, and Load |  |  |
+FA-IT | ASR Financial Aid IT Team |  |  |
+FAAN | Financial Aid Award Notice |  |  |
+FAFSA | Free Application for Federal Student Aid |  |  |
+FD | Functional Design |  |  |
+FERPA | Family Educational Rights and Privacy Act |  |  |
+FIX | FIX | System Environments | Operational support environment refreshed daily from production. |
+FPP | FAFSA Partner Portal |  |  |
+FPS | FAFSA Processing System |  |  |
+FVT/GE | Financial Value Transparency and Gainful Employment |  |  |
+GPAS | Graduate Planning and Audit System |  |  |
+GSSP | Graduate Student Services and Progress |  |  |
+HLC | Higher Learning Commission |  |  | https://www.hlcommission.org/
+IAM | Identity and Access Management |  |  |
+IDP | Individual Development Plan |  |  |
+IPEDS | Integrated Postsecondary Education Data System |  |  |
+ISIR | Individual Student Information Record |  |  |
+JSON | Java Script Object Notation | Coding | JavaScript Object Notation, is a widely used data-interchange format based on a subset of JavaScript syntax. It's text-based, lightweight, and easy for humans to read and write, as well as for machines to parse and generate. JSON is commonly used for transmitting data between a server and a web application, especially in web APIs. |
+JSSC | Job Scheduling Steering Committee | Committee |  |
+JST | Job Scheduling Team |  |  |
+KTT | Kick the Tires |  |  |
+MOHE | Minnesota Office of Higher Education |  |  | https://www.ohe.state.mn.us/
+MULTU | Multi-Institution Enrollment on Multiple Campuses in the same term |  |  |
+NDG | Non Degree |  |  |
+NHS | New freshman student (new high school) |  |  |
+NNE | No New Entry |  |  |
+NRA | Non-Resident Alien |  |  |
+NSC | National Student Clearinghouse |  |  |
+NLSDS | National Student Loan Data System |  |  |
+OASC | Operational Advisory Steering Committee |  |  |
+OCM | Office of Classroom Management | ASR Office |  |
+OIM | Oracle Identity Management |  |  |
+OIR | University Office of Institutional Research | University Office |  |
+OIT | Office of Information Technology | University Office |  |
+OSF | Office of Student Finance | ASR Office |  |
+OSI | Operation and Strategic Initiatives | ASR Office |  |
+OSSS | One Stop Student Services | ASR Office |  |
+OTE | Orientation and Strategic Initiatives | University Office |  |
+OTR | Office of the Registrar | ASR Office |  |
+OUE | Office of Undergraduate Education | University Office |  |
+P&A | Professional and Administrative |  |  |
+PAR | Provisioning and Access Requests |  |  |
+PCAS | Program Curriculum Approval System |  |  |
+PCOE | Proposed Changes to Email Offering |  |  |
+PDR | Professional Development Request |  |  |
+PEAK | Positioned for Excellence, Alignment, and Knowledge |  | System wide strategic initiative |
+PeopleSoft Images |  |  |  |
+PER | Performance Testing | System Environment | Exclusive use in application and database performance testing and impact analysis of changes. |
+PFM | Proposal for Modification |  |  |
+PGA | Parent Guest Access |  |  |
+PI | Program Increment |  |  |
+POC | Proof of Concept |  | POC used by PeopleSoft to send schools an idea of some future updates that will occur. |
+PRD | Production? |  |  |
+PRP | PeopleSoft Release Patchset |  |  |
+PSSA | PeopleSoft Support Administration |  |  |
+PUM | PeopleSoft Update Manager | System Environment | Source for most current images using DPK.CA. Use of bug replication. |
+QAT | Quality Assurance Testing | System Environment | Regression testing activities for PeopleSoft |
+QBU | Query-based updater |  |  |
+RRC | Resource Responsibilities Center |  |  |
+RTE | Release Train Engineer |  | Role on SAFE framework |
+RTF | Rich-Text Format |  |  |
+SAA | Student Accounts Assistance | Team | within OSF |
+SaaS | Software as a Service |  |  |
+SACR |  |  |  |
+SAFe | Scaled Agile Framework |  |  |
+SCEP | Senate Committee on Education Policy | Committee |  |
+SDA | Student Data Analytics | Team |  |
+SDI | Student Data Inquiry |  |  |
+SDLC | System Development Life Cycles |  |  |
+SETS | Student Enrollment Transition Success |  |  |
+SF-IT | ASR Student Financials IT Team | ASR Office |  |
+SFAC | Student Financial Aid Council |  |  |
+SIA | Sign In As |  |  |
+SMC | Salesforce Marking Cloud |  |  |
+SR-IT | ASR Student Records IT Team | ASR Office |  |
+SSRC | System Student Records Council |  |  |
+TDX | Team Dynamix | Ticketing System |  |
+TFMS | Tuition Fee Management System |  |  |
+TRN | Training - Application Setup & Configuration | System Environment | Reserved for use by training services teams for supporting the delivery of training materials and classes |
+TST | Test | System Environment | System testing activities for PeopleSoft applications |
+UDIR | University Data & Institutional Reporting |  |  |
+UFT | Unified Functional Testing |  |  |
+UMF | University of Minnesota Foundation |  |  |
+UPG | Upgrade Development & Testing | System Environment | Used for special projects, evaluation of new software, or large application image deployments |
+WCAG | Web Content Accessibility Guidelines |  |  |
+XML | Extensible Markup Language | Coding | A markup language designed to store and transport data, allowing for structured and human-readable data representation and exchange. |</textarea>
+
+    <div class="row" style="margin-top:10px;">
+      <button class="primary" id="startBtn">Start Game</button>
+      <button class="secondary" id="shuffleBtn">Shuffle</button>
+      <button class="secondary" id="clearScoreBtn">Reset Score</button>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <div>
+        <label class="muted" for="categoryFilter">Optional: filter by category</label>
+        <select id="categoryFilter">
+          <option value="">All categories</option>
+        </select>
+        <div class="tiny">Filtering happens when you click Start Game.</div>
+      </div>
+      <div>
+        <label class="muted" for="strictMode">Answer matching</label>
+        <select id="strictMode">
+          <option value="strict">Strict (must match exactly)</option>
+          <option value="loose">Loose (ignores small words)</option>
+        </select>
+        <div class="tiny">Loose mode is for humans. Strict mode is for auditors.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card hidden" id="gameCard">
+    <div class="row" style="align-items:center;">
+      <div>
+        <h2 style="margin:0;">2) Guess it</h2>
+        <div class="muted">
+          <span class="pill" id="progressPill">0 / 0</span>
+          <span class="pill">Score: <span id="score">0</span></span>
+          <span class="pill">Streak: <span id="streak">0</span></span>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <button class="secondary" id="showHintBtn">Show Notes</button>
+        <button class="secondary" id="skipBtn">Skip</button>
+        <button class="secondary" id="endBtn">End</button>
+      </div>
+    </div>
+
+    <div class="card" style="border-style:dashed;">
+      <div class="muted">Acronym:</div>
+      <div style="font-size:42px; font-weight:800; letter-spacing:1px;" id="acronym">-</div>
+
+      <div class="muted hidden" id="hintWrap" style="margin-top:8px;">
+        Notes: <span id="hintText"></span>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label class="muted" for="guess">Your guess:</label>
+        <input id="guess" placeholder="Type the meaning and hit Enter" />
+      </div>
+
+      <div style="margin-top:12px;" class="row">
+        <button class="primary" id="submitBtn">Submit</button>
+        <button class="secondary" id="revealBtn">Reveal</button>
+      </div>
+
+      <div id="feedback" style="margin-top:12px;"></div>
+      <div class="answer hidden" id="answerBox"></div>
+    </div>
+  </div>
+
+  <script>
+    const els = {
+      bankInput: document.getElementById('bankInput'),
+      startBtn: document.getElementById('startBtn'),
+      shuffleBtn: document.getElementById('shuffleBtn'),
+      clearScoreBtn: document.getElementById('clearScoreBtn'),
+      setupCard: document.getElementById('setupCard'),
+      gameCard: document.getElementById('gameCard'),
+      acronym: document.getElementById('acronym'),
+      guess: document.getElementById('guess'),
+      submitBtn: document.getElementById('submitBtn'),
+      revealBtn: document.getElementById('revealBtn'),
+      showHintBtn: document.getElementById('showHintBtn'),
+      hintWrap: document.getElementById('hintWrap'),
+      hintText: document.getElementById('hintText'),
+      feedback: document.getElementById('feedback'),
+      answerBox: document.getElementById('answerBox'),
+      progressPill: document.getElementById('progressPill'),
+      score: document.getElementById('score'),
+      streak: document.getElementById('streak'),
+      skipBtn: document.getElementById('skipBtn'),
+      endBtn: document.getElementById('endBtn'),
+      categoryFilter: document.getElementById('categoryFilter'),
+      strictMode: document.getElementById('strictMode')
+    };
+
+    let deck = [];
+    let idx = 0;
+    let score = 0;
+    let streak = 0;
+
+    function parseBank(text) {
+      return text
+        .split('\n')
+        .map(l => l.trim())
+        .filter(Boolean)
+        .map(line => {
+          const parts = line.split('|').map(p => p.trim());
+          return {
+            acr: parts[0] || '',
+            meaning: parts[1] || '',
+            category: parts[2] || '',
+            notes: parts[3] || '',
+            website: parts[4] || ''
+          };
+        })
+        .filter(x => x.acr && x.meaning);
+    }
+
+    function uniqueCategories(items) {
+      const set = new Set(items.map(i => (i.category || '').trim()).filter(Boolean));
+      return Array.from(set).sort((a,b) => a.localeCompare(b));
+    }
+
+    function refreshCategoryDropdown() {
+      const items = parseBank(els.bankInput.value);
+      const cats = uniqueCategories(items);
+
+      const current = els.categoryFilter.value || '';
+      els.categoryFilter.innerHTML = '<option value="">All categories</option>';
+      for (const c of cats) {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        els.categoryFilter.appendChild(opt);
+      }
+      els.categoryFilter.value = cats.includes(current) ? current : '';
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function normalize(s) {
+      return (s || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9 ]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function normalizeLoose(s) {
+      // removes common filler words so "Office of the Registrar" and "Office of Registrar" match
+      const stop = new Set(['the','of','and','for','to','a','an','in','on','at']);
+      return normalize(s).split(' ').filter(w => !stop.has(w)).join(' ');
+    }
+
+    function startGame() {
+      const all = parseBank(els.bankInput.value);
+      const cat = (els.categoryFilter.value || '').trim();
+
+      deck = cat ? all.filter(i => (i.category || '').trim() === cat) : all;
+
+      if (deck.length === 0) {
+        alert('No usable acronyms found. Each line needs at least: ACR | Meaning');
+        return;
+      }
+
+      shuffle(deck);
+      idx = 0;
+      score = 0;
+      streak = 0;
+      els.score.textContent = score;
+      els.streak.textContent = streak;
+
+      els.setupCard.classList.add('hidden');
+      els.gameCard.classList.remove('hidden');
+      loadCard();
+      els.guess.focus();
+    }
+
+    function loadCard() {
+      const item = deck[idx];
+      els.acronym.textContent = item.acr;
+      els.guess.value = '';
+      els.feedback.innerHTML = '';
+      els.answerBox.classList.add('hidden');
+      els.hintWrap.classList.add('hidden');
+      els.hintText.textContent = item.notes || '(no notes)';
+      els.progressPill.textContent = `${idx + 1} / ${deck.length}`;
+    }
+
+    function buildRevealHtml(item) {
+      const website = (item.website || '').trim();
+      const websiteHtml = website
+        ? `<div><strong>Website:</strong> <a href="${website}" target="_blank" rel="noopener noreferrer">${website}</a></div>`
+        : '';
+
+      const catHtml = item.category ? `<div><strong>Category:</strong> ${item.category}</div>` : '';
+      const notesHtml = item.notes ? `<div class="muted"><strong>Notes:</strong> ${item.notes}</div>` : '';
+
+      return `
+        <div><strong>Meaning:</strong> ${item.meaning}</div>
+        ${catHtml}
+        ${notesHtml}
+        ${websiteHtml}
+      `;
+    }
+
+    function submitGuess() {
+      const item = deck[idx];
+      const mode = els.strictMode.value;
+
+      const user = mode === 'loose' ? normalizeLoose(els.guess.value) : normalize(els.guess.value);
+      const correct = mode === 'loose' ? normalizeLoose(item.meaning) : normalize(item.meaning);
+
+      if (!user) return;
+
+      const isCorrect = user === correct;
+
+      if (isCorrect) {
+        score += 1;
+        streak += 1;
+        els.feedback.innerHTML = `<span class="ok">Correct.</span> Your acronym powers are growing.`;
+      } else {
+        streak = 0;
+        els.feedback.innerHTML = `<span class="nope">Nope.</span>`;
+        els.answerBox.innerHTML = buildRevealHtml(item);
+        els.answerBox.classList.remove('hidden');
+      }
+
+      els.score.textContent = score;
+      els.streak.textContent = streak;
+
+      setTimeout(nextCard, isCorrect ? 650 : 1150);
+    }
+
+    function revealAnswer() {
+      const item = deck[idx];
+      streak = 0;
+      els.streak.textContent = streak;
+      els.feedback.innerHTML = `<span class="muted">Revealed.</span> We have all been there.`;
+      els.answerBox.innerHTML = buildRevealHtml(item);
+      els.answerBox.classList.remove('hidden');
+    }
+
+    function showNotes() {
+      els.hintWrap.classList.remove('hidden');
+    }
+
+    function nextCard() {
+      idx += 1;
+      if (idx >= deck.length) {
+        els.acronym.textContent = 'Done!';
+        els.feedback.innerHTML = `<strong>Final score:</strong> ${score} / ${deck.length}`;
+        els.answerBox.classList.add('hidden');
+        els.hintWrap.classList.add('hidden');
+        els.guess.value = '';
+        return;
+      }
+      loadCard();
+      els.guess.focus();
+    }
+
+    function skipCard() {
+      streak = 0;
+      els.streak.textContent = streak;
+      nextCard();
+    }
+
+    function endGame() {
+      els.gameCard.classList.add('hidden');
+      els.setupCard.classList.remove('hidden');
+    }
+
+    els.startBtn.addEventListener('click', startGame);
+    els.submitBtn.addEventListener('click', submitGuess);
+    els.revealBtn.addEventListener('click', revealAnswer);
+    els.showHintBtn.addEventListener('click', showNotes);
+    els.skipBtn.addEventListener('click', skipCard);
+    els.endBtn.addEventListener('click', endGame);
+
+    els.shuffleBtn.addEventListener('click', () => {
+      const lines = els.bankInput.value.split('\n');
+      els.bankInput.value = shuffle(lines).join('\n');
+      refreshCategoryDropdown();
+    });
+
+    els.clearScoreBtn.addEventListener('click', () => {
+      score = 0; streak = 0;
+      els.score.textContent = score;
+      els.streak.textContent = streak;
+    });
+
+    els.guess.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitGuess();
+    });
+
+    els.bankInput.addEventListener('input', () => {
+      refreshCategoryDropdown();
+    });
+
+    // initial load
+    refreshCategoryDropdown();
+  </script>
+</body>
+</html>
